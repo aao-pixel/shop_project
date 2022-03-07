@@ -1,0 +1,127 @@
+# a shop class, with dict products, cart, cash
+# functions: add to cart, remove an item, display cart, etc (good to check the pdf file)
+# outside of the class, maybe I should create functions like help, inventory items to buy, stop
+
+
+class Shop:
+    def __init__(self, cash = 100.00):
+        self.products = {
+            "water": 2.50,
+            "milk": 3.20,
+            "eggs": 1.15,
+            "apple": 1.10,
+            "sausage": 7.80,
+            "cereal": 2.90,
+            "bacon": 4.40,
+            "cheese": 6.70,
+            "avocado": 3.20
+        }
+        self.cart = []
+        self.cash = cash
+
+# Add an item to the cart =>
+    def add_to_cart(self, item):
+        if item in self.products.keys():
+            self.cart.append(item)
+
+# Remove an item =>        
+    def remove_item(self, item):
+        if item in self.cart:
+            self.cart.remove(item)
+            print(f"{item.capitalize()} was removed from your cart. So sad to hear that!\n")
+
+# The total cost and checkout =>
+    def total_cart(self):
+        if len(self.cart) < 1:
+            print("There is no item here. Please, add items to your cart!\n")
+        else:
+            total = 0
+            for item in self.cart:
+                total = total + self.products.get(item) 
+            print(f"Your total is €{total:.2f}!\n")
+            if self.cash >= total:
+                cart_command = input("Ready to pay (y/n).")
+                if cart_command[0] == "y":
+                    print(f"You have €{self.cash:.2f}!")
+                    self.cash = self.cash - total
+                    print(f"Thank you for your purchase. Now, you have €{self.cash:.2f} remaining!\n")
+                    self.cart.clear()
+            else:
+                print(f"Sorry, you only have €{self.cash:.2f} and your total is {total:.2f} :(\n")
+
+    # def display_total(self):      
+    #     if len(self.cart) < 1:
+    #         print("There is no item here. Please, add items to your cart!\n")
+    #     else:
+    #         total = 0
+    #         for item in self.cart:
+    #             total = total + self.products.get(item) 
+    #         print(f"Your total is €{total:.2f}!\n")
+
+# Display the cart items =>
+    def display_cart(self):
+        if len(self.cart) > 0:
+            print("Cart:")
+            for item in self.cart:
+                print(f"    {item}")
+                print()
+        else:
+            print("Your cart is empty!\n")
+
+# Display the products =>       
+    def display_products_list(self):
+        products = str(self.products)
+        products = products.replace("'", "")
+        products = products.replace("{", "")
+        products = products.replace("}", "")
+        products = products.replace(": ", ": €")
+        products_list = products.split(", ")
+        for item in products_list:
+            print(item)
+        print() 
+
+def buy():
+    while True:
+        buy_command = input("What would you like to buy? :)")
+        if buy_command == "help":
+            print("\nYou may type an inventory item")
+        elif shop.products.get(buy_command):
+            shop.add_to_cart(buy_command)
+            print(f"{buy_command} was added to you cart! ;)\n")
+        elif buy_command == "inventory":
+            shop.display_products_list()
+        elif buy_command == "stop":
+            break
+        else: 
+            print("There is nothing you can do. Type help for a list of commands!\n")
+
+# Create the shop =>
+shop = Shop()
+shop.display_products_list()
+
+while True:
+    command = input("What would you like to do?")
+
+    if command == "help":
+        print("\nYou may type: buy, pay, total, remove, cart or leave")
+        print("buy = Pick items to purchase")
+        print("pay = Get a total of you items and purchase them")
+        print("remove = Remove an item from your cart")
+        print("leave = Leave the store\n")
+    elif command == "buy":
+        buy()
+    elif command == "leave":
+            print("Thank you for shopping. Have a nice day! :)\n")
+            break
+    elif command == "pay":
+        shop.total_cart()
+    elif command == "remove":
+        if len(shop.cart) < 1:
+            print("There are no items in your cart to remove!\n")
+        else:
+            remove_command = input("What item do you want to remove from your cart?")
+            shop.remove_item(remove_command)  
+    elif command == "cart":
+        shop.display_cart()
+    else:
+        print("There is nothing you can do. Type help for a list of commands!\n")
